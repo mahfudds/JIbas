@@ -1,0 +1,4 @@
+# Runtime error/debug logs (generated at runtime)
+*.log
+debugger.log
+*.error.log
