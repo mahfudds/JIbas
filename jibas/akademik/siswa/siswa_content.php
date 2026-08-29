@@ -60,6 +60,20 @@ if (isset($_REQUEST['urutan']))
 	
 OpenDb();
 
+// nama kelas + kapasitas utk header (default bila salah filter)
+$nama_kelas = ""; $kapasitas = 0; $isi = 0;
+if (isset($kelas) && $kelas != "") {
+	$rk = QueryDb("SELECT kelas, kapasitas FROM kelas WHERE replid='$kelas'");
+	$rowk = @mysqli_fetch_row($rk);
+	if ($rowk) {
+		$nama_kelas = $rowk[0];
+		$kapasitas = (int)$rowk[1];
+	}
+	$rc2 = QueryDb("SELECT COUNT(*) FROM siswa WHERE idkelas='$kelas' AND aktif=1");
+	$rowc = @mysqli_fetch_row($rc2);
+	$isi = (int)$rowc[0];
+}
+
 $op = $_REQUEST['op'];
 if ($op == "dw8dxn8w9ms8zs22") 
 {
@@ -116,28 +130,61 @@ else if ($op == "xm8r389xemx23xb2378e23")
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<link rel="stylesheet" type="text/css" href="../style/style.css">
-<link rel="stylesheet" type="text/css" href="../style/tooltips.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Pendataan Siswa</title>
+<title>Pendataan Siswa — JIBAS SIMAKA</title>
+<link rel="stylesheet" type="text/css" href="../style/menuui.css" />
+<style>
+:root{--green:#1D4533;--green-hi:#2A5A45;--cream:#F7EAE0;--peach:#F9D2BA;--peach-deep:#E0AA8C;--brown:#5E3122;--ink:#2A211B;--ink-mut:#6B5748;--line:#EADDD2}
+.pg-head{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.pg-head .ico{width:54px;height:54px;border-radius:15px;background:linear-gradient(135deg,var(--green),var(--green-hi));color:var(--cream);display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 18px rgba(29,69,51,.28)}
+.pg-head h1{font-size:22px;font-weight:800;color:var(--green);margin:0}
+.pg-head .bread{font-size:12px;color:var(--ink-mut);font-weight:700}
+.pg-head .bread a{color:var(--green)}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.toolbar .cap{font-size:13px;font-weight:800;color:var(--brown)}
+.toolbar .cap small{color:var(--ink-mut);font-weight:700}
+.toolbar .spacer{flex:1}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.abtn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:none;border-radius:8px;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--green);background:#E9F1EC;text-decoration:none;transition:background .14s,transform .1s}
+.abtn:hover{background:#DCE9E1;transform:translateY(-1px)}
+.abtn b{font-size:14px}
+.abtn.act{background:var(--green);color:#F7EAE0}
+.abtn.warn{background:#FBE7D4;color:var(--brown)}
+table.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(94,49,34,.06)}
+.tbl thead th{background:var(--green);color:#F7EAE0;padding:10px 12px;text-align:left;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+.tbl thead th:hover{background:var(--green-hi)}
+.tbl tbody td{padding:9px 12px;border-top:1px solid var(--line);font-size:13px;color:var(--ink)}
+.tbl tbody tr:nth-child(even){background:#FBF6F0}
+.tbl tbody tr:hover{background:#F3EAE0}
+.tbl .mono{font-family:Consolas,monospace;font-size:12px}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800}
+.badge.aktif{background:#E2F4EA;color:#0a8f61}
+.badge.nonaktif{background:#F9E3E0;color:#B53F3F}
+.badge.mutasi{background:#E8EFF7;color:#2f6bb5}
+.act-icons{display:flex;gap:8px;align-items:center;white-space:nowrap}
+.act-icons a{font-size:15px;text-decoration:none;cursor:pointer}
+.pager{display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px}
+.pager .inf{font-size:12.5px;color:var(--ink-mut);font-weight:700}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:44px;text-align:center;color:var(--ink-mut);font-size:14px}
+.empty a{color:var(--green);font-weight:800}
+@media (max-width:640px){.tbl td:nth-child(4),.tbl th:nth-child(4){display:none}.pg-head h1{font-size:18px}}
+</style>
 <script language="JavaScript" src="../script/tooltips.js"></script>
-<script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tables.js"></script>
 <script language="javascript" src="../script/tools.js"></script>
 <script language="javascript">
-
-function refresh() {	
+function refresh() {
 	var departemen = document.getElementById('departemen').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var kelas = document.getElementById('kelas').value;
 	var tingkat = document.getElementById('tingkat').value;
-	
 	document.location.href = "siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen;
 }
-
 function tambah() {
 	var departemen = document.getElementById('departemen').value;
 	var kelas = document.getElementById('kelas').value;
@@ -145,7 +192,6 @@ function tambah() {
 	var tingkat = document.getElementById('tingkat').value;
 	newWindow('siswa_add.php?departemen='+departemen+'&kelas='+kelas+'&tahunajaran='+tahunajaran+'&tingkat='+tingkat, 'TambahSiswa','905','650','resizable=1,scrollbars=1,status=0,toolbar=0')
 }
-
 function edit(replid, nis) {
 	var departemen = document.getElementById('departemen').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
@@ -153,7 +199,6 @@ function edit(replid, nis) {
 	var tingkat = document.getElementById('tingkat').value;
 	newWindow('siswa_edit.php?replid='+replid+'&departemen='+departemen+'&tahunajaran='+tahunajaran+'&kelas='+kelas+'&tingkat='+tingkat, 'UbahSiswa','905','650','resizable=1,scrollbars=1,status=0,toolbar=0')
 }
-
 function hapus(replid, nis) {
 	var departemen = document.getElementById('departemen').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
@@ -164,105 +209,60 @@ function hapus(replid, nis) {
 	if (confirm('Apakah anda yakin akan menghapus siswa ini?'))
 		document.location.href = "siswa_content.php?op=xm8r389xemx23xb2378e23&replid="+replid+"&tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&nis="+nis+"&urut="+urut+"&urutan="+urutan+"&page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
 }
-
 function change_urut(urut,urutan) {
 	var departemen = document.getElementById('departemen').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var kelas = document.getElementById('kelas').value;
 	var tingkat = document.getElementById('tingkat').value;
-	
-	if (urutan =="ASC"){
-		urutan="DESC"
-	} else {
-		urutan="ASC"
-	}
-	
-	//if (confirm("Apakah anda yakin akan menghapus angkatan ini?"))
+	if (urutan =="ASC"){ urutan="DESC" } else { urutan="ASC" }
 	document.location.href = "siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&urut="+urut+"&urutan="+urutan+"&page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
 }
-
 function cetak() {
 	var departemen = document.getElementById('departemen').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var kelas = document.getElementById('kelas').value;
 	var tingkat = document.getElementById('tingkat').value;
-	var urut = document.getElementById('urut').value;
-	var urutan = document.getElementById('urutan').value;
 	var total=document.getElementById("total").value;
-	
-	newWindow('siswa_cetak.php?departemen='+departemen+'&tahunajaran='+tahunajaran+'&tingkat='+tingkat+'&kelas='+kelas+'&urut='+urut+'&urutan='+urutan+'&varbaris=<?=$varbaris?>&page=<?=$page?>&total='+total, 'CetakSiswa','790','650','resizable=1,scrollbars=1,status=0,toolbar=0')
+	newWindow('siswa_cetak.php?departemen='+departemen+'&tahunajaran='+tahunajaran+'&tingkat='+tingkat+'&kelas='+kelas+'&varbaris=<?=$varbaris?>&page=<?=$page?>&total='+total, 'CetakSiswa','790','650','resizable=1,scrollbars=1,status=0,toolbar=0')
 }
-
 function exel(){
 	var departemen = document.getElementById('departemen').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var kelas = document.getElementById('kelas').value;
 	var tingkat = document.getElementById('tingkat').value;
-	var urut = document.getElementById('urut').value;
-	var urutan = document.getElementById('urutan').value;
-	
-	newWindow('siswa_cetak_excel.php?departemen='+departemen+'&tahunajaran='+tahunajaran+'&tingkat='+tingkat+'&kelas='+kelas+'&urut='+urut+'&urutan='+urutan, 'CetakSiswa','790','650','resizable=1,scrollbars=1,status=0,toolbar=0')
+	newWindow('siswa_cetak_excel.php?departemen='+departemen+'&tahunajaran='+tahunajaran+'&tingkat='+tingkat+'&kelas='+kelas, 'CetakSiswa','790','650','resizable=1,scrollbars=1,status=0,toolbar=0')
 }
-
 function tampil(replid) {
 	newWindow('../library/detail_siswa.php?replid='+replid, 'DetailSiswa','790','650','resizable=1,scrollbars=1,status=0,toolbar=0')
 }
-
 function refresh_after_add(){
 	var departemen = document.getElementById('departemen').value;
 	var kelas = document.getElementById('kelas').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var tingkat = document.getElementById('tingkat').value;
-	var urut = document.getElementById('urut').value;
-	var urutan = document.getElementById('urutan').value;
-	
-	document.location.href = "siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&urut="+urut+"&urutan="+urutan+"&page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
+	document.location.href = "siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
 }
-
 function setaktif(replid, aktif) {
-	var msg;
-	var newaktif;
+	var msg; var newaktif;
 	var departemen = document.getElementById('departemen').value;
 	var kelas = document.getElementById('kelas').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var tingkat = document.getElementById('tingkat').value;
-	var urut = document.getElementById('urut').value;
-	var urutan = document.getElementById('urutan').value;
-	var kapasitas = document.getElementById('kapasitas').value;
-	var isi = document.getElementById('isi').value;
-		
-	if (aktif == 1) {
-		msg = "Apakah anda yakin akan mengubah  siswa ini menjadi TIDAK AKTIF?";
-		newaktif = 0;
-	} else	{	
-		msg = "Apakah anda yakin akan mengubah siswa ini menjadi AKTIF?";
-		newaktif = 1;
-		//if (kapasitas > isi) {
-//			msg = "Apakah anda yakin akan mengubah siswa ini menjadi AKTIF?";
-//			newaktif = 1;
-//		} else {
-//			msg = "Apakah anda yakin akan mengubah siswa ini menjadi AKTIF?";
-//			//msg = "Status siswa tidak dapat diaktifkan karena kapasitas kelas tidak mencukupi";
-//			newaktif = 0;
-//		}
-	}
-	
+	if (aktif == 1) { msg = "Apakah anda yakin akan mengubah siswa ini menjadi TIDAK AKTIF?"; newaktif = 0; }
+	else { msg = "Apakah anda yakin akan mengubah siswa ini menjadi AKTIF?"; newaktif = 1; }
 	if (confirm(msg)) {
-		document.location.href = "siswa_content.php?op=dw8dxn8w9ms8zs22&replid="+replid+"&newaktif="+newaktif+"&tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&urut="+urut+"&urutan="+urutan+"&page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
+		document.location.href = "siswa_content.php?op=dw8dxn8w9ms8zs22&replid="+replid+"&newaktif="+newaktif+"&tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&page=<?=$page?>&hal=<?=$hal?>&varbaris=<?=$varbaris?>";
 		parent.header.location.href = "siswa_header.php?tahunajaran="+tahunajaran+"&tingkat="+tingkat+"&departemen="+departemen+"&kelas="+kelas;
 	}
 }
-
 function change_page(page) {
 	var departemen = document.getElementById('departemen').value;
 	var kelas = document.getElementById('kelas').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var tingkat = document.getElementById('tingkat').value;
 	var varbaris=document.getElementById("varbaris").value;
-	
 	document.location.href = "siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&page="+page+"&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris="+varbaris+"&hal="+page;
 }
-
 function change_hal() {
 	var departemen = document.getElementById("departemen").value;
 	var kelas = document.getElementById('kelas').value;
@@ -270,20 +270,16 @@ function change_hal() {
 	var tingkat = document.getElementById('tingkat').value;
 	var hal = document.getElementById("hal").value;
 	var varbaris=document.getElementById("varbaris").value;
-	
 	document.location.href="siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&page="+hal+"&hal="+hal+"&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris="+varbaris;
 }
-
 function change_baris() {
 	var departemen = document.getElementById("departemen").value;
 	var kelas = document.getElementById('kelas').value;
 	var tahunajaran = document.getElementById('tahunajaran').value;
 	var tingkat = document.getElementById('tingkat').value;
 	var varbaris=document.getElementById("varbaris").value;
-	
 	document.location.href= "siswa_content.php?tingkat="+tingkat+"&kelas="+kelas+"&tahunajaran="+tahunajaran+"&departemen="+departemen+"&urut=<?=$urut?>&urutan=<?=$urutan?>&varbaris="+varbaris;
 }
-
 </script>
 </head>
 <body topmargin="0" leftmargin="0">
@@ -294,211 +290,134 @@ function change_baris() {
 <input type="hidden" name="urut" id="urut" value="<?=$urut ?>" />
 <input type="hidden" name="urutan" id="urutan" value="<?=$urutan ?>" />
 
-<table border="0" width="100%" align="center">
-<!-- TABLE CENTER -->
-<tr>
-	<td align="right">
-    <?
+<div style="width:100%;margin:0;padding:22px 20px 40px">
+	<div class="pg-head">
+		<span class="ico">&#128106;</span>
+		<div>
+			<h1>Pendataan Siswa</h1>
+			<div class="bread"><a href="siswa.php" target="content">Kesiswaan</a> &rsaquo; Pendataan Siswa</div>
+		</div>
+	</div>
+
+	<div class="toolbar">
+		<span class="cap"><?=$nama_kelas ?: 'Pilih kelas' ?> <small>(isi <?=$isi ?> / <?=$kapasitas ?> , kapasitas)</small></span>
+		<div class="spacer"></div>
+		<div class="btn-row">
+			<a class="abtn act" href="JavaScript:tambah()"><b>&#10133;</b>Tambah Siswa</a>
+			<a class="abtn" href="#" onclick="refresh()"><b>&#10227;</b>Refresh</a>
+			<a class="abtn" href="JavaScript:exel()"><b>&#128196;</b>Excel</a>
+			<a class="abtn" href="JavaScript:cetak()"><b>&#128424;</b>Cetak</a>
+		</div>
+	</div>
+
+<?
 	$sql_tot = "SELECT nis,nama,asalsekolah,tmplahir,tgllahir,s.aktif,DAY(tgllahir),MONTH(tgllahir),YEAR(tgllahir),s.replid,s.nisn FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = '$kelas' AND k.idtahunajaran = '$tahunajaran' AND k.idtingkat = '$tingkat' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.alumni=0 ORDER BY replid ";
 	$result_tot = QueryDb($sql_tot);
 	$total=ceil(mysqli_num_rows($result_tot)/(int)$varbaris);
 	$jumlah = mysqli_num_rows($result_tot);
 	$akhir = ceil($jumlah/5)*5;
-	
+
 	$sql = "SELECT nis,nama,asalsekolah,tmplahir,tgllahir,s.aktif,DAY(tgllahir),MONTH(tgllahir),YEAR(tgllahir),s.replid,s.statusmutasi,s.alumni,s.nisn FROM jbsakad.siswa s, jbsakad.kelas k, jbsakad.tahunajaran t WHERE s.idkelas = '$kelas' AND k.idtahunajaran = '$tahunajaran' AND k.idtingkat = '$tingkat' AND s.idkelas = k.replid AND t.replid = k.idtahunajaran AND s.alumni=0 ORDER BY $urut $urutan LIMIT ".(int)$page*(int)$varbaris.",$varbaris";
 	$result = QueryDb($sql);
-	
-	if (@mysqli_num_rows($result)>0){ 
+
+	if (@mysqli_num_rows($result)>0){
 		$sql_kapasitas = "SELECT kapasitas FROM kelas WHERE replid = '$kelas'";
 		$result_kapasitas = QueryDb($sql_kapasitas);
 		$row_kapasitas = mysqli_fetch_row($result_kapasitas);
 		$kapasitas = $row_kapasitas[0];
-		
 		$sql_siswa = "SELECT COUNT(*) FROM siswa WHERE idkelas = '$kelas' AND aktif = 1";
 		$result_siswa = QueryDb($sql_siswa);
 		$row_siswa = mysqli_fetch_row($result_siswa);
 		$isi = $row_siswa[0];
-	
 ?>
-    <input type="hidden" name="total" id="total" value="<?=$total?>"/>
-    <input type="hidden" name="kapasitas" id="kapasitas" value="<?=$kapasitas?>"/>
-    <input type="hidden" name="isi" id="isi" value="<?=$isi?>"/>
-    <table width="100%" border="0" align="center">
-  	<tr>
-    	<td align="right">
-    	<a href="#" onClick="refresh()">
-        <img src="../images/ico/refresh.png" border="0" onMouseOver="showhint('Refresh!', this, event, '50px')"/>&nbsp;Refresh</a>&nbsp;&nbsp;
-    	<a href="#" onClick="JavaScript:exel()"><img src="../images/ico/excel.png" border="0" onMouseOver="showhint('Cetak dalam format Excel!', this, event, '80px')"/>&nbsp;Cetak Excel</a>&nbsp;&nbsp;
-        <a href="JavaScript:cetak()"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak!', this, event, '50px')"/>&nbsp;Cetak</a>&nbsp;&nbsp; 
-	    <a href="#" onClick="JavaScript:tambah()"><img src="../images/ico/tambah.png" border="0" onMouseOver="showhint('Tambah!', this, event, '50px')" />&nbsp;Tambah Data Siswa</a>
-		</td>
-	</tr>    
-    </table>
-	<br />       
-	<table border="1" width="100%" id="table" class="tab" align="center" style="border-collapse:collapse" bordercolor="#000000" />
-	<tr class="header" height="30" align="center">		
-		<td width="4%">No</td>
-		<td width="10%"onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nis','<?=$urutan?>')">N I S <?=change_urut('nis',$urut,$urutan)?></td>
-		<td width="10%"onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nisn','<?=$urutan?>')">N I S N <?=change_urut('nisn',$urut,$urutan)?></td>
-		<td width="*" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('nama','<?=$urutan?>')">Nama <?=change_urut('nama',$urut,$urutan)?></td>
-      	<td width="15%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('asalsekolah','<?=$urutan?>')">Asal Sekolah <?=change_urut('asalsekolah',$urut,$urutan)?></td>
-		<td width="20%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer; " onClick="change_urut('tgllahir','<?=$urutan?>')">Tempat Tanggal Lahir <?=change_urut('tgllahir',$urut,$urutan)?></td>
-        <td width="8%" onMouseOver="background='../style/formbg2agreen.gif';height=30;" onMouseOut="background='../style/formbg2.gif';height=30;" background="../style/formbg2.gif" style="cursor:pointer;" onClick="change_urut('aktif','<?=$urutan?>')">Status <?=change_urut('aktif',$urut,$urutan)?></td>
-		<td width="15%">&nbsp;</td>
-	</tr>
-		<? 
-		
-		CloseDb();
-		if ($page==0){
-			$cnt = 1;
-		}else{ 
-			$cnt = (int)$page*(int)$varbaris+1;
-		}
-		while ($row = @mysqli_fetch_row($result)) {
-		
-		?>	
-	<tr>        			
-		<td height="25" align="center"><?=$cnt?></td>
-		<td height="25" align="center"><?=$row[0]?></td>
-		<td height="25" align="left"><?=$row[12]?></td>
-  		<td height="25" align="left"><?=$row[1]?></td>
-        <td height="25" align="left"><?=$row[2]?></td>
-        <!--<td height="25"><?=$row[3].', '.$row[6].'&nbsp;'.$namabulan.'&nbsp;'.$row[8]?></td>-->
-        <td height="25" align="left"><?=$row[3].', '.$row[6].'&nbsp;'.NamaBulan($row[7]).'&nbsp;'.$row[8]?></td>
-        <td height="25" align="center">
-<?		if ($row[10] == 0) { ?>
-	<?		if (SI_USER_LEVEL() == $SI_USER_STAFF) {  			
-				if ($row[5] == 1) { 
-					?> 
-					<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
-	<?			} else { ?>                
-					<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/>
-	<?			}
-			} else {	
-				if ($row[5] == 1) {	?>
-					<a href="JavaScript:setaktif(<?=$row[9] ?>, <?=$row[5] ?>)"><img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/></a>
-	<?			} else { 
-					if ($kapasitas > $isi) {
-					?>
-					<a href="JavaScript:setaktif(<?=$row[9] ?>, <?=$row[5] ?>)"><img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status Tidak Aktif!', this, event, '80px')"/></a>
-	<?				} else { ?>
-					<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Status siswa tidak dapat diaktifkan karena kapasitas kelas tidak mencukupi!', this, event, '165px')"/>
-	<?				
-					}
-				} //end if
-			} //end if 
-		} else {
-			if ($row[5] == 1) { 
-					?> 
-					<img src="../images/ico/aktif.png" border="0" onMouseOver="showhint('Status Aktif!', this, event, '80px')"/>
-	<?			} else { ?>                
-					<img src="../images/ico/nonaktif.png" border="0" onMouseOver="showhint('Sudah di mutasi!', this, event, '80px')"/>
-	<?			}
-		}	
-			?>        	
-</td>
-        <td height="25" align="center">
-        	<a href="JavaScript:tampil(<?=$row[9]?>)" ><img src="../images/ico/lihat.png" border="0" onMouseOver="showhint('Detail Data Siswa!', this, event, '80px')" /></a>&nbsp;        
-        	<a href="#" onClick="newWindow('siswa_cetak_detail.php?replid=<?=$row[9]?>', 'DetailSiswa','800','650','resizable=1,scrollbars=1,status=0,toolbar=0')"><img src="../images/ico/print.png" border="0" onMouseOver="showhint('Cetak Detail Data Siswa!', this, event, '80px')"/></a>&nbsp;
-			<a href="JavaScript:edit(<?=$row[9]?>)" /><img src="../images/ico/ubah.png" border="0" onMouseOver="showhint('Ubah Data Siswa!', this, event, '80px')"/></a>&nbsp;
-  		<? 	if (SI_USER_LEVEL() != $SI_USER_STAFF) {	?>             	
-        	<a href="JavaScript:hapus(<?=$row[9] ?>,'<?=$row[0] ?>')"><img src="../images/ico/hapus.png" border="0" onMouseOver="showhint('Hapus Data Siswa!', this, event, '80px')"/></a>
-		<?	} ?>
-        </td>
-	</tr>
-<?		$cnt++; 
-		} 
-?>			
-	
-    <!-- END TABLE CONTENT -->
-    </table>
-   
-    <script language='JavaScript'>
-	    Tables('table', 1, 0);
-    </script>
-	
-    <?	if ($page==0){ 
-		$disback="style='visibility:hidden;'";
-		$disnext="style='visibility:visible;'";
-		}
-		if ($page<$total && $page>0){
-		$disback="style='visibility:visible;'";
-		$disnext="style='visibility:visible;'";
-		}
-		if ($page==$total-1 && $page>0){
-		$disback="style='visibility:visible;'";
-		$disnext="style='visibility:hidden;'";
-		}
-		if ($page==$total-1 && $page==0){
-		$disback="style='visibility:hidden;'";
-		$disnext="style='visibility:hidden;'";
-		}
-	?>
-    	
-       	</td>
-</tr> 
-<tr>
-    <td>
-    <table border="0"width="100%" align="center" cellpadding="0" cellspacing="0">	
-    <tr>
-       	<td width="30%" align="left">Halaman
-        <select name="hal" id="hal" onChange="change_hal()">
-        <?	for ($m=0; $m<$total; $m++) {?>
-             <option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
-        <? } ?>
-     	</select>
-	  	dari <?=$total?> halaman
-		
-		<? 
-     // Navigasi halaman berikutnya dan sebelumnya
-        ?>
-        </td>
-    	<!--td align="center">
-    <input <?=$disback?> type="button" class="but" name="back" value=" << " onClick="change_page('<?=(int)$page-1?>')" onMouseOver="showhint('Sebelumnya', this, event, '75px')">
+	<input type="hidden" name="total" id="total" value="<?=$total?>"/>
+	<input type="hidden" name="kapasitas" id="kapasitas" value="<?=$kapasitas?>"/>
+	<input type="hidden" name="isi" id="isi" value="<?=$isi?>"/>
+
+	<table class="tbl" id="table">
+		<thead>
+			<tr>
+				<th width="46">No</th>
+				<th class="sort" onclick="change_urut('nis','<?=$urutan?>')">NIS <?=change_urut('nis',$urut,$urutan)?></th>
+				<th onclick="change_urut('nisn','<?=$urutan?>')">NISN <?=change_urut('nisn',$urut,$urutan)?></th>
+				<th onclick="change_urut('nama','<?=$urutan?>')">Nama <?=change_urut('nama',$urut,$urutan)?></th>
+				<th onclick="change_urut('asalsekolah','<?=$urutan?>')">Asal Sekolah <?=change_urut('asalsekolah',$urut,$urutan)?></th>
+				<th onclick="change_urut('tgllahir','<?=$urutan?>')">Tempat, Tanggal Lahir <?=change_urut('tgllahir',$urut,$urutan)?></th>
+				<th onclick="change_urut('aktif','<?=$urutan?>')">Status <?=change_urut('aktif',$urut,$urutan)?></th>
+				<th>Aksi</th>
+			</tr>
+		</thead>
+		<tbody>
 		<?
-		/*for($a=0;$a<$total;$a++){
-			if ($page==$a){
-				echo "<font face='verdana' color='red'><strong>".($a+1)."</strong></font> "; 
-			} else { 
-				echo "<a href='#' onClick=\"change_page('".$a."')\">".($a+1)."</a> "; 
-			}
-				 
-	    }*/
+		CloseDb();
+		if ($page==0){ $cnt = 1; } else { $cnt = (int)$page*(int)$varbaris+1; }
+		while ($row = @mysqli_fetch_row($result)) {
 		?>
-	     <input <?=$disnext?> type="button" class="but" name="next" value=" >> " onClick="change_page('<?=(int)$page+1?>')" onMouseOver="showhint('Berikutnya', this, event, '75px')">
- 		</td-->
-        <td width="30%" align="right">Jumlah baris per halaman
-      	<select name="varbaris" id="varbaris" onChange="change_baris()">
-        <? 	for ($m=10; $m <= 100; $m=$m+10) { ?>
-        	<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
-        <? 	} ?>
-       
-      	</select></td>
-    </tr>
-    </table>
-	</td>
-</tr>
-</table>  
-<?	} else { ?>
+		<tr>
+			<td><?=$cnt?></td>
+			<td class="mono"><?=$row[0]?></td>
+			<td class="mono"><?=$row[12]?></td>
+			<td><strong><?=$row[1]?></strong></td>
+			<td><?=$row[2]?></td>
+			<td><?=$row[3]?>, <?=$row[6]?>&nbsp;<?=NamaBulan($row[7])?>&nbsp;<?=$row[8]?></td>
+			<td>
+			<? if ($row[10] == 0) { ?>
+				<? if ($row[5] == 1) { ?>
+					<? if (SI_USER_LEVEL() == $SI_USER_STAFF) { ?>
+						<span class="badge aktif">Aktif</span>
+					<? } else { ?>
+						<a href="JavaScript:setaktif(<?=$row[9]?>, <?=$row[5]?>)"><span class="badge aktif">Aktif</span></a>
+					<? } ?>
+				<? } else { ?>
+					<? if (SI_USER_LEVEL() == $SI_USER_STAFF || $kapasitas <= $isi) { ?>
+						<span class="badge nonaktif">Nonaktif</span>
+					<? } else { ?>
+						<a href="JavaScript:setaktif(<?=$row[9]?>, <?=$row[5]?>)"><span class="badge nonaktif">Nonaktif</span></a>
+					<? } ?>
+				<? } ?>
+			<? } else { ?>
+				<span class="badge <?= $row[5]==1 ? 'mutasi' : 'nonaktif' ?>"><?= $row[5]==1 ? 'Dimutasi' : 'Nonaktif' ?></span>
+			<? } ?>
+			</td>
+			<td>
+				<div class="act-icons">
+					<a href="JavaScript:tampil(<?=$row[9]?>)" title="Detail">&#128065;</a>
+					<a href="#" onClick="newWindow('siswa_cetak_detail.php?replid=<?=$row[9]?>', 'DetailSiswa','800','650','resizable=1,scrollbars=1,status=0,toolbar=0')" title="Cetak Detail">&#128424;</a>
+					<a href="JavaScript:edit(<?=$row[9]?>)" title="Ubah">&#128221;</a>
+					<? if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
+					<a href="JavaScript:hapus(<?=$row[9]?>,'<?=$row[0]?>')" title="Hapus">&#128465;</a>
+					<? } ?>
+				</div>
+			</td>
+		</tr>
+		<? $cnt++; } ?>
+		</tbody>
+	</table>
+	<script language='JavaScript'>Tables('table', 1, 0);</script>
 
-<table width="100%" border="0" align="center">          
-<tr>
-	<td align="center" valign="middle" height="300">
-    	<font size = "2" color ="red"><b>Tidak ditemukan adanya data. 
-       	<? //if (SI_USER_LEVEL() != $SI_USER_STAFF) { ?>
-        <br />Klik &nbsp;<a href="JavaScript:tambah()" ><font size = "2" color ="green">di sini</font></a>&nbsp;untuk mengisi data baru. 
-        <? //} ?>        
-        </b></font>
-	</td>
-</tr>
-</table>  
-<? } ?> 
-</td></tr>
+	<div class="pager">
+		<div class="inf">Halaman
+			<select name="hal" id="hal" onChange="change_hal()">
+			<? for ($m=0; $m<$total; $m++) {?>
+				<option value="<?=$m ?>" <?=IntIsSelected($hal,$m) ?>><?=$m+1 ?></option>
+			<? } ?>
+			</select>
+			dari <?=$total?> halaman &middot; <?=$jumlah ?> siswa
+		</div>
+		<div class="inf">Baris per halaman
+			<select name="varbaris" id="varbaris" onChange="change_baris()">
+			<? for ($m=10; $m<=100; $m=$m+10) {?>
+				<option value="<?=$m ?>" <?=IntIsSelected($varbaris,$m) ?>><?=$m ?></option>
+			<? } ?>
+			</select>
+		</div>
+	</div>
 
-<!-- END TABLE BACKGROUND IMAGE -->
-</table> 
-<?
-CloseDb();
-?>
+<? } else { ?>
+	<div class="empty">Tidak ditemukan data siswa.
+		<br />Klik <a href="JavaScript:tambah()">di sini</a> untuk mengisi data baru.
+	</div>
+<? } ?>
+</div>
 </body>
 </html>

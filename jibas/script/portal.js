@@ -14,6 +14,7 @@
   var mBtn = document.getElementById("jbsModalBtn");
 
   var current = null;
+  var CARD_INDEX = [];
 
   // ---- render ----
   function esc(s) {
@@ -25,12 +26,19 @@
   function render() {
     var grid = document.getElementById("jbsServiceGrid");
     var lfrag = document.createDocumentFragment();
+    CARD_INDEX = [];
 
     APPS.forEach(function (a, i) {
       var row = document.createElement("a");
       row.className = "service-card";
       row.href = a.url;
       row.style.setProperty("--sc", a.color);
+      // Buka app internal di tab sama via modal; URL eksternal dibuka di tab baru.
+      var external = /^https?:\/\//i.test(a.url || "");
+      if (external && !a.action) {
+        row.setAttribute("target", "_blank");
+        row.setAttribute("rel", "noopener");
+      }
       row.innerHTML =
         '<span class="sc-icon">' + a.icon + "</span>" +
         '<span class="sc-body"><span class="sc-name">' + esc(a.name) + "</span>" +
@@ -42,10 +50,34 @@
       row.addEventListener("click", function (e) {
         if (a.action) { e.preventDefault(); onApp(a); }
       });
+      CARD_INDEX.push({ el: row, name: (a.name || "").toLowerCase(), desc: (a.desc || "").toLowerCase() });
       lfrag.appendChild(row);
     });
 
     grid.appendChild(lfrag);
+  }
+
+  // Live filter by keyword across tile name + description
+  function wireSearch() {
+    var box = document.getElementById("jbsSearch");
+    var clear = document.getElementById("jbsSearchClear");
+    var empty = document.getElementById("jbsSearchEmpty");
+    if (!box) return;
+
+    function apply(q) {
+      q = (q || "").trim().toLowerCase();
+      var any = false;
+      CARD_INDEX.forEach(function (c) {
+        var hit = !q || c.name.indexOf(q) !== -1 || c.desc.indexOf(q) !== -1;
+        c.el.style.display = hit ? "" : "none";
+        if (hit) any = true;
+      });
+      if (empty) empty.style.display = any ? "none" : "block";
+      if (clear) clear.classList.toggle("show", !!q);
+    }
+
+    box.addEventListener("input", function () { apply(box.value); });
+    if (clear) clear.addEventListener("click", function () { box.value = ""; apply(""); box.focus(); });
   }
 
   function onApp(a) {
@@ -150,6 +182,7 @@
 
   // ---- wire ----
   render();
+  wireSearch();
 
   overlay.addEventListener("click", function (e) { if (e.target === overlay) closeModal(); });
   document.getElementById("jbsModalClose").addEventListener("click", closeModal);

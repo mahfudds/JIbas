@@ -114,6 +114,12 @@ ps_init(); // trigger load once
     <div class="kicker"><?= htmlspecialchars(ps('services_kicker')) ?></div>
     <h2><?= htmlspecialchars(ps('services_judul')) ?></h2>
     <p><?= htmlspecialchars(ps('services_teks')) ?></p>
+    <div class="search-box">
+      <span class="search-ico">&#128269;</span>
+      <input type="text" id="jbsSearch" placeholder="Cari aplikasi atau layanan..." autocomplete="off" />
+      <button type="button" class="search-clear" id="jbsSearchClear" aria-label="Bersihkan">&times;</button>
+    </div>
+    <div class="search-empty" id="jbsSearchEmpty" style="display:none">Tidak ada aplikasi yang cocok.</div>
   </div>
   <div class="services-grid" id="jbsServiceGrid"></div>
 </section>

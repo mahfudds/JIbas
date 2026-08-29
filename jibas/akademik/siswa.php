@@ -20,6 +20,7 @@ menu_panel('all', array(
 	array('href'=>'siswa/siswa_pindah_main.php','label'=>'Pindah Kelas','desc'=>'Pendataan siswa yang akan pindah kelas','icon'=>'&#128260;','color'=>array_shift($colors)),
 	array('href'=>'siswa/siswa_statistik_main.php','label'=>'Statistik Kesiswaan','desc'=>'Statistik data kesiswaan','icon'=>'&#128202;','color'=>array_shift($colors)),
 	array('href'=>'siswa/pin_main.php','label'=>'PIN Siswa','desc'=>'Kelola PIN siswa','icon'=>'&#128273;','color'=>array_shift($colors)),
+	array('href'=>'siswa/siswa_import.php','label'=>'Import CSV Siswa','desc'=>'Import data siswa dari file CSV','icon'=>'&#128228;','color'=>array_shift($colors)),
 	array('href'=>'referensi/tambahandata.php?from=Kesiswaan','label'=>'Kolom Tambahan Data','desc'=>'Konfigurasi kolom tambahan data siswa','icon'=>'&#128221;','color'=>array_shift($colors)),
 	array('href'=>'','label'=>'Tahun Ajaran','desc'=>'Kelola tahun ajaran via menu Referensi','icon'=>'&#128197;','color'=>'#8a6a12','alert'=>'Gunakan menu Tahun Ajaran di bagian referensi untuk mendata Tahun Ajaran'),
 ), 'Semua menu pendataan &amp; pengaturan kesiswaan.');

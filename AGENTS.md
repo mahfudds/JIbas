@@ -129,5 +129,15 @@ Jangan membuat/meng-edit file `.install.php` secara manual tanpa memahami alurny
 `log/` (error log query, via `LogError()` bila `$G_ENABLE_QUERY_ERROR_LOG`) dan `temp/`
 harus bisa ditulis oleh user web server. Tiap module juga punya `log/` & `temp/` masing-masing.
 
+## Data MAN 4 NGAWI (sudah diimport)
+- Departemen aktif = `MAN 4 NGAWI`. Tahun ajaran aktif replid `23` (2026/2027). Tingkat replid `26/27/28` (=10/11/12).
+- `pegawai` (44 GTK): Guru→Akademik, Tenaga Kependidikan→Non Akademik. FK `agama`/`suku` wajib nilai valid (Islam/Jawa).
+- `pelajaran` 21 mapel (kode 3-huruf: AKH,BAM,BAR,BIG,BIN,BIO,BIS,BKK,EKO,FIQ,FIS,GEO,IPA,IPS,KIM,MAT,PJK,PKN,QRD,SKI,TIK) + 28 `guru` (guru-mapel via nip).
+- `kelas` 13 rombel (X-A..XII-D, tahunajaran 23, kapasitas 34). `jenisujian` 105 (21 mapel × 5: PH,PTS,PAS,US,UAS Praktek).
+- `siswa` 264 (Kelas 10=61, 11=107, 12=96) via `siswa/siswa_import.php` + CSV; tiap siswa juga dibuat `riwayatkelassiswa` + `riwayatdeptsiswa`.
+- Semester: `21`=Semester I (aktif), `22`=Semester II. Angkatan replid: `20`=2024, `21`=2025, `22`=2026.
+- `rpp` 13 untuk mapel Sosiologi (idpelajaran 64) Kurikulum Merdeka kelas 10-12 (kode SOS-X-01..SOS-XII-04).
+- **Gotcha import siswa**: kolom `alamatortu` varchar(100) — alamat panjang harus di-truncate (pakai `alamatsiswa` varchar(255) utuh). Importer memakai `@mysqli_query` + cek `mysqli_errno` agar 1 baris gagal tidak menghentikan seluruh import (JANGAN pakai `QueryDb` di loop import massal — akan trigger displayerror).
+
 ## Git
 Repo ini BUKAN git repository; semua file langsung di tree.
