@@ -2,117 +2,55 @@
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
- * 
+ *
  * @version: 35.5 (August 10, 2026)
- * @notes: 
- * 
+ * @notes: Frame bawah - status bar modern
+ *
  * Copyright (C) 2024 JIBAS (http://www.jibas.net)
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- **[N]**/ ?>
-<?
-//require_once("include/theme.php"); 
-/*if (isset($_REQUEST['theme'])){
-	$theme = (int)$_REQUEST['theme'];
-} else {
-	$theme = 1;
-}
-if ($theme == 1) {
-	$thm ="images/theme/lavender/";
-} elseif ($theme == 2) {
-	$thm = "images/theme/red/";
-} elseif ($theme == 3) {
-	$thm = "images/theme/green/";
-} elseif ($theme == 4) {
-	$thm = "images/theme/blue/";
-} elseif ($theme == 5) {
-	$thm = "images/theme/black/";
-}
-*/
-require_once("include/sessioninfo.php"); 
-//$nama = SI_USER_NAME();
-//if ($nama=="landlord")
-//	$nama = "Administrator JIBAS [Infoguru]";
-	?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+ ... GPL header ...
+**[N]**/ ?>
+<?php
+require_once("include/sessioninfo.php");
+require_once("include/config.php");
+
+$user = SI_USER_NAME();
+if ($user == "landlord") $user = "Administrator JIBAS [Akademik]";
+?>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
-<script language="javascript" src="script/clock.js"></script>
-<script type="text/javascript" language="JavaScript">
-function get_fresh(){
-	document.location.reload();
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Status</title>
+<style>
+:root{--green:#1D4533;--green-hi:#2A5A45;--cream:#F7EAE0;--peach:#F9D2BA;--brown:#5E3122;--ink-mut:#CDB9A6}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{
+	font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+	background:linear-gradient(90deg,#16352a 0%, var(--green) 55%, var(--green-hi) 100%);
+	color:var(--cream);
 }
-function BlinkText(Current){
-	if (Current=='')
-		Current=0;
-	Current = parseInt(Current);
-	var Txt = "DEMO Version";
-
-	if (Current==(Txt.length+10)){
-		Current=0;
-		document.getElementById('TxtDemo').innerHTML = '';
-	}
-	var	x   = Txt.charAt(Current);
-	Current = parseInt(Current);
-	setTimeout("BlinkText2('"+x+"','"+Current+"')",100);
-}
-function BlinkText2(x,Current){
-	var y = document.getElementById('TxtDemo').innerHTML;
-	document.getElementById('TxtDemo').innerHTML = y+x;
-	Current = parseInt(Current);
-	BlinkText(Current+1);
-}
-</script>
+.bar{display:flex;align-items:center;justify-content:space-between;height:100%;padding:0 14px;gap:12px}
+.side{display:flex;align-items:center;gap:10px;min-width:0}
+.side.right{justify-content:flex-end}
+.dot{width:8px;height:8px;border-radius:50%;background:#6fd598;box-shadow:0 0 8px rgba(111,213,152,.8);flex:none}
+.lbl{font-size:12px;font-weight:700}
+.muted{font-size:11px;color:var(--ink-mut)}
+.ver{font-size:11px;font-weight:700;color:var(--peach);border:1px solid rgba(249,210,186,.4);padding:3px 9px;border-radius:999px}
+</style>
 </head>
-
-<body style="background-color:#6a6a6a" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" >
-<table id="Table_01" width="100%"  border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td >
-			<img src="images/Akademik2_19.png" width="25" height="10" alt=""></td>
-		<td height="10" colspan="2" background="images/Akademik2_20.png">		</td>
-  <td width="1%">
-			<img src="images/Akademik2_22.png" width="10" height="10" alt=""></td>
-		<td width="2%">
-			<img src="images/Akademik2_23.png" width="17" height="10" alt=""></td>
-  </tr>
-	<tr>
-		<td>
-			<img src="images/Akademik2_24.png" width="25" height="31" alt=""></td>
-		<td width="100%" height="31" valign="top" background="images/Akademik2_25.png">
-        <span style="color:#FFFF00; font-family:Verdana; font-size:12px; padding-bottom:2px">
-		<?
-		if ($_SESSION['namasimaka']=="landlord"){
-		echo "Administrator JIBAS [Akademik]";
-		} else {
-		echo $_SESSION['namasimaka'];
-		}
-		?>
-	  	</span>        </td>
-        <td align="right" valign="top" background="images/Akademik2_25.png">
-        	<table border="0" cellspacing="0" cellpadding="0" width="150">
-              <tr>
-                <td align="left">
-                                </td>
-              </tr>
-            </table>        </td>
-      <td>
-		  <img src="images/Akademik2_27.png" width="10" height="31" alt=""></td>
-		<td>
-			<img src="images/Akademik2_28.png" width="17" height="31" alt=""></td>
-	</tr>
-</table>
+<body>
+<div class="bar">
+	<div class="side left">
+		<span class="dot"></span>
+		<span class="lbl"><?= htmlspecialchars($user) ?></span>
+		<span class="muted">Online</span>
+	</div>
+	<div class="side right">
+		<span class="muted">JIBAS SIMAKA</span>
+		<span class="ver">v<?= $G_VERSION ?></span>
+	</div>
+</div>
 </body>
 </html>

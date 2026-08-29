@@ -26,9 +26,12 @@ require_once('include/config.php');
 session_name("jbsakad");
 session_start();
 
-if (isset($_SESSION['namasimaka'])) 
+if (isset($_SESSION['namasimaka'])) {
 	include("index2.php");
-else 
-	include("login.php");
+} else {
+	// Belum login -> kembali ke halaman depan (portal) supaya login lewat modal.
+	header("Location: ../");
+	exit;
+}
 	
 ?>

@@ -2,193 +2,103 @@
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
- * 
+ *
  * @version: 35.5 (August 10, 2026)
- * @notes: 
- * 
+ * @notes: Referensi - modern menu shell
+ *
  * Copyright (C) 2024 JIBAS (http://www.jibas.net)
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- **[N]**/ ?>
+ ... GPL header ...
+**[N]**/ ?>
 <?
 include('cek.php');
 require_once('include/sessioninfo.php');
+require_once('include/config.php');
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<title>Untitled-1</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" type="text/css" href="style/tooltips.css">
-<script type="text/javascript" src="script/tooltips.js"></script>
-<script type="text/javascript">
-function get_fresh(){
-	document.location.reload();
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Referensi — JIBAS SIMAKA</title>
+<style>
+:root{
+  --green:#1D4533; --green-hi:#2A5A45; --cream:#F7EAE0; --peach:#F9D2BA;
+  --peach-deep:#E0AA8C; --brown:#5E3122; --ink:#2A211B; --ink-mut:#6B5748;
+  --card:#FFFFFF; --line:#EADDD2;
+  --shadow:0 1px 3px rgba(94,49,34,.06), 0 12px 34px rgba(94,49,34,.10);
 }
-function change_theme(theme){
-	parent.topcenter.location.href="topcenter.php?theme="+theme;
-	parent.topleft.location.href="topleft.php?theme="+theme;
-	parent.topright.location.href="topright.php?theme="+theme;
-	parent.midleft.location.href="midleft.php?theme="+theme;
-	get_fresh();
-	parent.midright.location.href="midright.php?theme="+theme;
-	parent.bottomleft.location.href="bottomleft.php?theme="+theme;
-	parent.bottomcenter.location.href="bottomcenter.php?theme="+theme;
-	parent.bottomright.location.href="bottomright.php?theme="+theme;
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#FFFFFF;
+  padding:18px 18px 32px;
+  -webkit-font-smoothing:antialiased;
 }
-</script>
+a{text-decoration:none;color:inherit}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.topbar .mark{
+  width:30px;height:30px;border-radius:9px;flex:none;
+  background:linear-gradient(135deg,var(--green),var(--green-hi));
+  color:var(--cream);display:flex;align-items:center;justify-content:center;
+  font-size:15px;box-shadow:0 5px 11px rgba(29,69,51,.28);
+}
+.topbar .tt b{font-size:16px;color:var(--green);display:block}
+.topbar .tt span{font-size:11px;color:var(--ink-mut)}
+.wrap{width:100%;margin:0}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px}
+.sec-head h2{margin:0;font-size:13px;font-weight:800;color:var(--brown);letter-spacing:.4px}
+.sec-head .count{font-size:11px;font-weight:700;color:var(--ink-mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.tile{
+  background:var(--cream);border:1px solid #EDE0D5;border-radius:11px;padding:11px 10px;
+  box-shadow:0 1px 3px rgba(94,49,34,.05);display:flex;flex-direction:column;gap:5px;
+  transition:transform .15s ease,box-shadow .15s ease;position:relative;overflow:hidden;
+}
+.tile::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--tc,var(--green))}
+.tile:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(94,49,34,.12)}
+.tile .ico{width:78px;height:78px;border-radius:18px;background:#FFFFFF;
+  color:#000;display:flex;align-items:center;justify-content:center;font-size:39px;
+  border:1px solid var(--line)}
+.tile .nm{font-size:12px;font-weight:800;color:var(--green)}
+.tile .desc{font-size:10.5px;color:var(--ink-mut);line-height:1.35}
+.tile a.chev{color:var(--peach-deep);font-weight:700;font-size:14px;align-self:flex-end;margin-top:auto}
+.hi{display:flex;align-items:center;gap:8px;color:var(--green);font-size:11px;font-weight:700;margin-top:6px}
+@media (max-width:560px){
+  body{padding:14px 12px 26px}
+  .grid{grid-template-columns:repeat(3,1fr);gap:8px}
+}
+</style>
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<!-- ImageReady Slices (Untitled-1) -->
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td>&nbsp;&nbsp;<font size="5" style="background-color:#ffcc66">&nbsp;</font>&nbsp;<font size="3" face="Verdana" color="Gray"><strong>REFERENSI</strong></font></td>
-  </tr>
-</table>
-<br>
-<table id="Table_01" width="491" height="434" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="3" rowspan="6">
-			<img src="images/referensi_01.jpg" width="75" height="229" alt=""></td>
-		<td rowspan="2">
-			<a href="referensi/pegawai.php" onMouseOver="showhint('Pendataan Pegawai', this, event, '100px')"><img src="images/referensi_02.jpg" width="67" height="83" alt="" border="0"></a></td>
-		<td colspan="11">
-			<img src="images/referensi_03.jpg" width="348" height="35" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="35" alt=""></td>
-	</tr>
-	<tr>
-		<td colspan="7" rowspan="2">
-			<img src="images/referensi_04.jpg" width="250" height="57" alt=""></td>
-		<td colspan="2" rowspan="3"><a href="referensi/identitas.php" onMouseOver="showhint('Identitas Sekolah', this, event, '100px')"><img src="images/referensi_05.jpg" width="56" height="91" alt="" border="0"></a></td>
-		<td colspan="2" rowspan="5">
-			<img src="images/referensi_06.jpg" width="42" height="194" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="48" alt=""></td>
-	</tr>
-	<tr>
-		<td rowspan="8">
-			<img src="images/referensi_07.jpg" width="67" height="350" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="9" alt=""></td>
-	</tr>
-	<tr>
-		<td colspan="2" rowspan="3">
-			<img src="images/referensi_08.jpg" width="59" height="137" alt=""></td>
-		<td colspan="3" rowspan="2">
-			<a href="referensi/departemen.php" onMouseOver="showhint('Pendataan Departemen', this, event, '100px')"><img src="images/referensi_09.jpg" width="78" height="71" alt="" border="0"></a></td>
-		<td colspan="2" rowspan="3">
-			<img src="images/referensi_10.jpg" width="113" height="137" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="34" alt=""></td>
-	</tr>
-	<tr>
-		<td colspan="2" rowspan="2">
-			<img src="images/referensi_11.jpg" width="56" height="103" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="37" alt=""></td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<img src="images/referensi_12.jpg" width="78" height="66" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="66" alt=""></td>
-	</tr>
-	<tr>
-		<td rowspan="4">
-			<img src="images/referensi_13.jpg" width="10" height="204" alt=""></td>
-		<td>
-			<a href="referensi/angkatan.php" onMouseOver="showhint('Pendataan Angkatan', this, event, '100px')"><img src="images/referensi_14.jpg" width="53" height="76" alt="" border="0"></a></td>
-		<td rowspan="4">
-			<img src="images/referensi_15.jpg" width="12" height="204" alt=""></td>
-		<td rowspan="4">
-			<img src="images/referensi_16.jpg" width="4" height="204" alt=""></td>
-		<td colspan="2">
-			<a href="referensi/tingkat.php" onMouseOver="showhint('Pendataan Tingkat', this, event, '100px')"><img src="images/referensi_17.jpg" width="59" height="76" alt="" border="0"></a></td>
-		<td colspan="2" rowspan="2">
-			<img src="images/referensi_18.jpg" width="74" height="130" alt=""></td>
-		<td>
-			<a href="referensi/tahunajaran.php" onMouseOver="showhint('Pendataan Tahun Ajaran', this, event, '100px')"><img src="images/referensi_19.jpg" width="71" height="76" alt="" border="0"></a></td>
-		<td colspan="2" rowspan="4">
-			<img src="images/referensi_20.jpg" width="54" height="204" alt=""></td>
-		<td colspan="2">
-			<a href="referensi/semester.php" onMouseOver="showhint('Pendataan Semester', this, event, '100px')"><img src="images/referensi_21.jpg" width="61" height="76" alt="" border="0"></a></td>
-		<td rowspan="4">
-			<img src="images/referensi_22.jpg" width="25" height="204" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="76" alt=""></td>
-	</tr>
-	<tr>
-		<td rowspan="3">
-			<img src="images/referensi_23.jpg" width="53" height="128" alt=""></td>
-		<td colspan="2">
-			<img src="images/referensi_24.jpg" width="59" height="54" alt=""></td>
-		<td rowspan="3">
-			<img src="images/referensi_25.jpg" width="71" height="128" alt=""></td>
-		<td colspan="2" rowspan="3">
-			<img src="images/referensi_26.jpg" width="61" height="128" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="54" alt=""></td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<a href="referensi/kelas.php" onMouseOver="showhint('Pendataan Kelas', this, event, '100px')"><img src="images/referensi_27.jpg" width="68" height="71" alt="" border="0"></a></td>
-		<td rowspan="2">
-			<img src="images/referensi_28.jpg" width="65" height="74" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="71" alt=""></td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<img src="images/referensi_29.jpg" width="68" height="3" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="1" height="3" alt=""></td>
-	</tr>
-	<tr>
-		<td>
-			<img src="images/spacer.gif" width="10" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="53" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="12" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="67" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="4" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="55" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="4" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="9" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="65" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="71" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="42" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="12" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="44" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="17" height="1" alt=""></td>
-		<td>
-			<img src="images/spacer.gif" width="25" height="1" alt=""></td>
-		<td></td>
-	</tr>
-</table>
-<div style="right:5px; bottom:5px; position:absolute;" align="right">
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="mark">&#128209;</div>
+    <div class="tt"><b>REFERENSI</b><span>JIBAS SIMAKA &middot; Pendataan &amp; Pengaturan</span></div>
+  </div>
+
+  <div class="sec-head"><h2>&#127991; Data Referensi</h2><span class="count">8 menu</span></div>
+  <div class="grid">
+    <a class="tile" style="--tc:#2f6bb5" href="referensi/pegawai.php" target="content">
+      <span class="ico">&#128104;</span><span class="nm">Pegawai</span><span class="desc">Pendataan data pegawai.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#0a8f61" href="referensi/identitas.php" target="content">
+      <span class="ico">&#127963;</span><span class="nm">Identitas Sekolah</span><span class="desc">Data identitas &amp; profil sekolah.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#7a4fb5" href="referensi/departemen.php" target="content">
+      <span class="ico">&#127970;</span><span class="nm">Departemen</span><span class="desc">Pendataan departemen.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#c2701f" href="referensi/angkatan.php" target="content">
+      <span class="ico">&#128101;</span><span class="nm">Angkatan</span><span class="desc">Pendataan angkatan siswa.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#b53f3f" href="referensi/tingkat.php" target="content">
+      <span class="ico">&#128218;</span><span class="nm">Tingkat</span><span class="desc">Pendataan tingkat/kelas tingkatan.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#1896a8" href="referensi/tahunajaran.php" target="content">
+      <span class="ico">&#128197;</span><span class="nm">Tahun Ajaran</span><span class="desc">Pendataan tahun ajaran.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#3f9db5" href="referensi/semester.php" target="content">
+      <span class="ico">&#128337;</span><span class="nm">Semester</span><span class="desc">Pendataan semester.</span><span class="chev">&rsaquo;</span></a>
+    <a class="tile" style="--tc:#7a6a2f" href="referensi/kelas.php" target="content">
+      <span class="ico">&#128218;</span><span class="nm">Kelas</span><span class="desc">Pendataan kelas &amp; rombel.</span><span class="chev">&rsaquo;</span></a>
+  </div>
+
+  <div class="hi">&#128100; Login: <?= htmlspecialchars(SI_USER_NAME()) ?> &middot; v JIBAS <?= $G_VERSION ?></div>
 </div>
-<!-- End ImageReady Slices -->
 </body>
 </html>

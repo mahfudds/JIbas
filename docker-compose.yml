@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mariadb:10.11
+    container_name: jibas-db
+    # host network: JIBAS is hardcoded to connect to localhost:3434 in
+    # database.config.php, and URLs resolve to http://localhost/... .
+    network_mode: host
+    environment:
+      MYSQL_ROOT_PASSWORD: kebersamaan
+      MYSQL_ROOT_HOST: '%'
+      LANG: C.UTF-8
+    command:
+      - --port=3434
+      - --bind-address=0.0.0.0
+      - --character-set-server=utf8mb4
+    volumes:
+      # auto-imported on first (empty) data dir start; creates all 10 DBs
+      - ./jibas_db.sql:/docker-entrypoint-initdb.d/01-jibas.sql:ro
+      - jibas-db-data:/var/lib/mysql
+    restart: unless-stopped
+
+  web:
+    build: .
+    container_name: jibas-web
+    # host network + port 80 mapped via apache defaults
+    network_mode: host
+    depends_on:
+      - db
+    volumes:
+      # bind mount (live), NOT copy: edits in the repo are live in the container
+      - .:/var/www/html
+    restart: unless-stopped
+
+volumes:
+  jibas-db-data:

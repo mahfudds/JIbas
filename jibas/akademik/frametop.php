@@ -2,216 +2,95 @@
 /**[N]**
  * JIBAS Education Community
  * Jaringan Informasi Bersama Antar Sekolah
- * 
+ *
  * @version: 35.5 (August 10, 2026)
- * @notes: 
- * 
+ * @notes: Frame atas - topbar navigasi modern
+ *
  * Copyright (C) 2024 JIBAS (http://www.jibas.net)
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- **[N]**/ ?>
-<? 
-require_once("include/theme.php"); 
+ ... GPL header ...
+**[N]**/ ?>
+<?php
+require_once("include/theme.php");
 require_once("include/errorhandler.php");
 require_once("include/sessioninfo.php");
 require_once("include/common.php");
 require_once("include/config.php");
 require_once("include/db_functions.php");
-require_once("include/sessioninfo.php");
 
-$menu="";
-if (isset($_REQUEST['menu']))
-	$menu=$_REQUEST['menu'];
-$content="";
-if (isset($_REQUEST['content']))
-	$content=$_REQUEST['content'];	
+function show_info(){ }
+function hide_info(){ }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
-<script type="text/javascript" language="JavaScript1.2" src="design/dhtml/stmenu.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Navigasi — JIBAS SIMAKA</title>
 <script type="text/javascript" language="JavaScript1.2" src="script/ajax.js"></script>
 <script type="text/javascript" language="JavaScript1.2" src="script/tools.js"></script>
 <script type="text/javascript" language="JavaScript1.2">
-function get_fresh(){
-	document.location.reload();
-}
-function chating_euy(){
-	newWindow('buletin/chat/chat.php','ChattingYuk',626,565,'resizable=0,scrollbars=0,status=0,toolbar=0');
-}
-function home(){
-	document.location.reload();
-	parent.framecenter.location.href="home.php";
-}
-function akademik(){
-	sendRequestText("get_content.php", show_content, "menu=akademik");
-	parent.framecenter.location.href="home.php";
-}
-function buletin(){
-	sendRequestText("get_content.php", show_content, "menu=buletin");
-	parent.framecenter.location.href="home.php";
-}
-function pengaturan(){
-	sendRequestText("get_content.php", show_content, "menu=pengaturan");
-	parent.framecenter.location.href="home.php";
-}
-function dotnet(){
-	sendRequestText("get_content.php", show_content, "menu=dotnet");
-	parent.framecenter.location.href="home.php";
-}
+function get_fresh(){ document.location.reload(); }
+function home(){ document.location.reload(); parent.framecenter.location.href="home.php"; }
 function logout() {
-    if (confirm("Anda yakin akan menutup Aplikasi Manajemen Akademik ini?"))
+	if (confirm("Anda yakin akan menutup Aplikasi Manajemen Akademik ini?"))
 		document.location.href="logout.php";
 }
-function show_content(x) {
-	document.getElementById("vscroll0").innerHTML = x;
-}
-function show_wait(areaId) {
-	var x = document.getElementById("waitBox").innerHTML;
-	document.getElementById(areaId).innerHTML = x;
-}
-function ganti() {
-	var login=document.getElementById('login').value;
-	var addr="pengaturan/ganti_password2.php";
-	if (login=="LANDLORD" || login=="landlord"){
-		alert ('Maaf, Administrator tidak dapat mengganti password !');
-		parent.framecenter.location.href="center.php";
-	} else {
-		newWindow(addr,'GantiPasswordUser','419','200','resizeable=0,scrollbars=0,status=0,toolbar=0');
-	}
-}
-function show_info(){
-	document.getElementById('menu').style.display='none';
-	document.getElementById('tentang').style.display='';
-	parent.content.location.href="jibasinfo.php";
-}
-function hide_info(){
-	document.getElementById('menu').style.display='';
-	document.getElementById('tentang').style.display='none';
-	parent.content.location.href="referensi.php";
-}
-
 </script>
-<style type="text/css">
-<!--
-.style3 {font-size: 10px; font-weight:bold; line-height:10px; }
-.style7 {font-size: 13px; font-weight: normal; line-height: 12px; font-family: Arial; color:#FFF; text-decoration:none }
-.style9 {color: #FFFFFF; font-weight: bold; font-family: Verdana; font-size: 12px; text-decoration:none }
--->
+<style>
+:root{
+	--green:#1D4533; --green-hi:#2A5A45; --cream:#F7EAE0; --peach:#F9D2BA;
+	--peach-deep:#E0AA8C; --brown:#5E3122; --ink:#2A211B; --ink-mut:#6B5748;
+	--line:#EADDD2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+	font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+	background:linear-gradient(90deg,#16352a 0%, var(--green) 55%, var(--green-hi) 100%);
+	overflow:hidden;
+}
+a{text-decoration:none;color:inherit}
+.nav{
+	display:flex;align-items:center;height:100%;padding:0 10px;gap:6px;
+	overflow-x:auto;white-space:nowrap;scrollbar-width:thin;
+}
+.brand{display:flex;align-items:center;gap:8px;flex:none;padding-right:12px}
+.brand .bk{width:30px;height:30px;border-radius:8px;background:var(--peach);
+	display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--brown)}
+.brand .bt{color:#F7EAE0;font-size:13px;font-weight:800;letter-spacing:.5px}
+.item{
+	display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:none;
+	color:#EAD6C4;font-size:9px;font-weight:700;line-height:1.1;
+	padding:5px 11px;border-radius:10px;border:1px solid transparent;
+	transition:background .14s,color .14s,border-color .14s;text-align:center;
+}
+.item:hover{background:rgba(255,255,255,.10);color:#F9D2BA;border-color:rgba(249,210,186,.35)}
+.item .em{font-size:33px;line-height:1}
+.item .lb{font-size:9px;line-height:1.1;max-width:80px;overflow:hidden;text-overflow:ellipsis}
+.item.active{background:rgba(249,210,186,.20);color:#F9D2BA;border-color:rgba(249,210,186,.4)}
+.item.logout{color:#F1C7B6}
+.item.logout:hover{background:rgba(212,84,84,.25);color:#fff;border-color:rgba(212,84,84,.5)}
 </style>
 </head>
-<body style="background-color:#6a6a6a" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" >
-<table id="Table_01" width="100%" border="0" cellpadding="0" cellspacing="0">	
-    <tr>
-		<td>
-			<img src="images/Akademik2_01.png" width="25" height="13" alt=""></td>
-		<td width="50%" height="13" valign="bottom" background="images/Akademik2_02.png">
-        <!--a class="style9" style="color:#FFFFFF; cursor:pointer" onClick="show_info()" >Tentang JIBAS</a-->		</td>
-		<td width="50%" align="right" valign="bottom" background="images/Akademik2_02.png">
-          
-        </td>
-		<td background="images/Akademik2_03.png" width="94" height="13">
-   		</td>
-		<td>
-			<img src="images/Akademik2_04.png" width="10" height="13" alt=""></td>
-		<td>
-			<img src="images/Akademik2_05.png" width="17" height="13" alt=""></td>
-	</tr>
-	<tr>
-		<td><img src="images/Akademik2_06.png" width="25" height="61" alt=""></td>
-		<td width="100%" height="46" colspan="2" background="images/Akademik2_07.png">
-        <!-- Begin Content ================================================================================================-->
-		<table border="0" cellpadding="0" cellspacing="0" id="menu">
-		  <tr>
-		    <td style="padding-right:5px"  valign="top"> <a style="text-decoration:none" href="referensi.php" target="content" onClick="MM_nbGroup('down','group1','referensioff','images/ico/Icon Header/referensi2.png',1)" onMouseOver="MM_nbGroup('over','referensioff','images/ico/Icon Header/referensi2.png','',1)" onMouseOut="MM_nbGroup('out')"><div align="center"> <img src="images/ico/Icon Header/referensi.png" alt="REFERENSI" name="referensioff" width="60" height="35" border="0" id="referensioff" onload="" /><br />
-		        <span class="style7">Referensi</span></div></a></td>
-		 
-		    <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="siswa_baru.php" target="content" onClick="MM_nbGroup('down','group1','calonsiswaoff','images/ico/Icon Header/calon2.png',0)" onMouseOver="MM_nbGroup('over','calonsiswaoff','images/ico/Icon Header/calon2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/calon.png" alt="PENERIMAAN SISWA BARU" name="calonsiswaoff" width="60" height="35" border="0" id="calonsiswaoff" onload="" /><br />
-		      <span class="style7">P S B</span></a>		    </div></td>
-		
-		    <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="guru.php" target="content" onClick="MM_nbGroup('down','group1','guruoff','images/ico/Icon Header/guru2.png',0)" onMouseOver="MM_nbGroup('over','guruoff','images/ico/Icon Header/guru2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/guru.png" alt="GURU &amp; PELAJARAN" name="guruoff" width="60" height="35" border="0" id="guruoff" onload="" /><br />
-		        <span class="style7">Guru&nbsp;&amp;<br />Pelajaran</span></a></div></td>
-		 
-		    <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="jadwal.php" target="content" onClick="MM_nbGroup('down','group1','jadwaloff','images/ico/Icon Header/jadwal2.png',0)" onMouseOver="MM_nbGroup('over','jadwaloff','images/ico/Icon Header/jadwal2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/jadwal.png" alt="JADWAL" name="jadwaloff" width="60" height="35" border="0" id="jadwaloff" onload="" /><br />
-		        <span class="style7">Jadwal&nbsp;&amp;<br />Kalender</span></a></div></td>
-		
-		    <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="siswa.php" target="content" onClick="MM_nbGroup('down','group1','siswaoff','images/ico/Icon Header/siswa2.png',0)" onMouseOver="MM_nbGroup('over','siswaoff','images/ico/Icon Header/siswa2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/siswa.png" alt="KESISWAAN" name="siswaoff" width="60" height="35" border="0" id="siswaoff" onload="" /><br />
-		        <span class="style7">Kesiswaan</span></a></div></td>
-		
-		    <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="presensi.php" target="content" onClick="MM_nbGroup('down','group1','presensioff','images/ico/Icon Header/presensi2.png',0)" onMouseOver="MM_nbGroup('over','presensioff','images/ico/Icon Header/presensi2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/presensi.png" alt="PRESENSI" name="presensioff" width="60" height="35" border="0" id="presensioff" onload="" /><br />
-		        <span class="style7">Presensi</span></a></div></td>
-		
-		    <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="penilaian.php" target="content" onClick="MM_nbGroup('down','group1','penilaianoff','images/ico/Icon Header/penilaian2.png',0)" onMouseOver="MM_nbGroup('over','penilaianoff','images/ico/Icon Header/penilaian2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/penilaian.png" alt="" name="penilaianoff" width="60" height="35" border="0" onLoad="" /><br />
-		      
-		        <span class="style7">Penilaian</span></a></div></td>
-
-            <td style="padding-right:5px" valign="top">
-
-                <div align="center">
-                    <a style="text-decoration:none" href="exim.php" target="content"
-                       onClick="MM_nbGroup('down','group1','eximoff','images/ico/Icon Header/exim2.png',0)"
-                       onMouseOver="MM_nbGroup('over','eximoff','images/ico/Icon Header/exim2.png','',0)"
-                       onMouseOut="MM_nbGroup('out')">
-                        <img src="images/ico/Icon Header/exim.png" alt="" name="penilaianoff" width="60" height="35" border="0" onLoad="" /><br />
-
-                      <span class="style7">Ekspor Impor</span></a>
-                </div>
-            </td>
-		    
-		   <td style="padding-right:5px" valign="top">  <div align="center"><a style="text-decoration:none" href="kelulusan.php" target="content" class="style3" onClick="MM_nbGroup('down','group1','kenaikan','images/ico/Icon Header/kenaikan2.png',0)" onMouseOver="MM_nbGroup('over','kenaikan','images/ico/Icon Header/kenaikan2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/kenaikan.png" alt="" name="kenaikan" width="60" height="35" border="0" onLoad="" /><br />
-		     <span class="style7">Kenaikan&nbsp;&amp;<br />Kelulusan</span></a></div></td>
-            
-               <td style="padding-right:5px" valign="top"> <div align="center"> 
-				<a style="text-decoration:none" href="mutasi.php" target="content" onClick="MM_nbGroup('down','group1','mutasioff','images/ico/Icon Header/mutasi2.png',0)" onMouseOver="MM_nbGroup('over','mutasioff','images/ico/Icon Header/mutasi2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/mutasi.png" alt="MUTASI" name="mutasioff" width="60" height="35" border="0" id="mutasioff" onload="" /><br />
-                <span class="style7">Mutasi</span></a></div></td>
-			   
-			<td style="padding-right:5px" valign="top">
-				<div align="center">
-					<a style="text-decoration:none" href="pelaporanmenu.php" target="content"
-					   onClick="MM_nbGroup('down','group1','pelaporan','images/ico/Icon Header/pelaporan2.png',0)"
-					   onMouseOver="MM_nbGroup('over','pelaporan','images/ico/Icon Header/pelaporan2.png','',0)"
-					   onMouseOut="MM_nbGroup('out')">	<img src="images/ico/Icon Header/pelaporan.png"
-					   alt="Pelaporan" name="pelaporan" height="34" border="0" onLoad="" /><br /><span class="style7">Pelaporan</span></a>
-				</div>
-			</td>
-            
-		       <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="usermenu.php" target="content"  onClick="MM_nbGroup('down','group1','user','images/ico/Icon Header/pengaturan2.png',0)" onMouseOver="MM_nbGroup('over','user','images/ico/Icon Header/pengaturan2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/pengaturan.png" alt="Manajemen User" name="user" width="60" height="35" border="0" onLoad="" /><br />
-	            <span class="style7">Pengaturan</span></a></div></td>
-                
-                <td style="padding-right:5px" valign="top"> <div align="center"> <a style="text-decoration:none" href="javascript:logout();"  onMouseOver="MM_nbGroup('over','logout','images/ico/Icon Header/logout2.png','',0)" onMouseOut="MM_nbGroup('out')"><img src="images/ico/Icon Header/logout.png" alt="Logout" name="logout" width="60" height="35" border="0" onLoad="" /><br />
-	            <span class="style7">Keluar</span></a></div></td>
-		  </tr>
-		  </table>		</td>
-		<td>
-			<img src="images/Akademik2_08.png" width="94" height="61" alt=""></td>
-		<td>
-			<img src="images/Akademik2_09.png" width="10" height="61" alt=""></td>
-		<td>
-			<img src="images/Akademik2_10.png" width="17" height="61" alt=""></td>
-	</tr>
-	<tr>
-		<td>
-			<img src="images/Akademik2_11.png" width="25" height="13" alt=""></td>
-		<td width="100%" height="13" colspan="2" background="images/Akademik2_12.png">		</td>
-		<td>
-			<img src="images/Akademik2_13.png" width="94" height="13" alt=""></td>
-		<td>
-			<img src="images/Akademik2_14.png" width="10" height="13" alt=""></td>
-		<td>
-			<img src="images/Akademik2_15.png" width="17" height="13" alt=""></td>
-	</tr>
-</table>
+<body>
+<nav class="nav">
+	<div class="brand">
+		<span class="bk">&#127963;</span>
+		<span class="bt">SIMAKA</span>
+	</div>
+	<a class="item<?= $menu=='referensi'?' active':'' ?>" href="referensi.php" target="content"><span class="em">&#128209;</span><span class="lb">Referensi</span></a>
+	<a class="item<?= $menu=='psb'?' active':'' ?>" href="siswa_baru.php" target="content"><span class="em">&#128101;</span><span class="lb">PSB</span></a>
+	<a class="item<?= $menu=='guru'?' active':'' ?>" href="guru.php" target="content"><span class="em">&#128104;</span><span class="lb">Guru &amp; Pelajaran</span></a>
+	<a class="item<?= $menu=='jadwal'?' active':'' ?>" href="jadwal.php" target="content"><span class="em">&#128197;</span><span class="lb">Jadwal &amp; Kalender</span></a>
+	<a class="item<?= $menu=='siswa'?' active':'' ?>" href="siswa.php" target="content"><span class="em">&#128106;</span><span class="lb">Kesiswaan</span></a>
+	<a class="item<?= $menu=='presensi'?' active':'' ?>" href="presensi.php" target="content"><span class="em">&#128203;</span><span class="lb">Presensi</span></a>
+	<a class="item<?= $menu=='penilaian'?' active':'' ?>" href="penilaian.php" target="content"><span class="em">&#128202;</span><span class="lb">Penilaian</span></a>
+	<a class="item<?= $menu=='exim'?' active':'' ?>" href="exim.php" target="content"><span class="em">&#128229;</span><span class="lb">Ekspor Impor</span></a>
+	<a class="item<?= $menu=='kelulusan'?' active':'' ?>" href="kelulusan.php" target="content"><span class="em">&#127891;</span><span class="lb">Kenaikan &amp; Kelulusan</span></a>
+	<a class="item<?= $menu=='mutasi'?' active':'' ?>" href="mutasi.php" target="content"><span class="em">&#128260;</span><span class="lb">Mutasi</span></a>
+	<a class="item<?= $menu=='pelaporan'?' active':'' ?>" href="pelaporanmenu.php" target="content"><span class="em">&#128196;</span><span class="lb">Pelaporan</span></a>
+	<a class="item<?= $menu=='pengaturan'?' active':'' ?>" href="usermenu.php" target="content"><span class="em">&#9881;</span><span class="lb">Pengaturan</span></a>
+	<a class="item logout" href="javascript:logout()"><span class="em">&#9203;</span><span class="lb">Keluar</span></a>
+</nav>
 </body>
 </html>
